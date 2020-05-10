@@ -67,11 +67,8 @@ class SimulatedAnnealing(BaseClass):
         min_system_temperature = 1
 
         system_temperature = 0.9 * system_temperature
-        print(system_temperature)
 
         x, system_temperature = self._disturb_system(x, system_temperature)
-
-        print(f'x: {x}, system_temperature: {system_temperature}')
 
         if system_temperature >= min_system_temperature:
             x, system_temperature = self._disturb_system(x, system_temperature)
