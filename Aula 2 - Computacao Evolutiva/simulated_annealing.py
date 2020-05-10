@@ -42,9 +42,8 @@ class SimulatedAnnealing(BaseClass):
         return x, system_temperature
 
     def _disturb_system(self, x, system_temperature):
-        system_temperature = self.g_function(system_temperature)
+        system_temperature = self.cd g_function(system_temperature)
         x_rate = self.rate(x)
-        best_value = 1
 
         for _ in range(self.max_iterations):
             new_x = self.disturb(x)
@@ -54,7 +53,7 @@ class SimulatedAnnealing(BaseClass):
             exponential_function_result = exp(
                 (new_x_rate - x_rate) / system_temperature)
 
-            if abs(best_value - new_x_rate) < abs(best_value - x_rate):
+            if new_x_rate > x_rate:
                 x, x_rate = new_x, new_x_rate
             elif random_element < exponential_function_result:
                 x, x_rate = new_x, new_x_rate
