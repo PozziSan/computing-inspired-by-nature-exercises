@@ -7,10 +7,11 @@ bitstring = [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1]
 element_len = len(bitstring)
 population_len = 16
 
-crossover_rate = 0.95
-mutation_rate = 0.7
+crossover_rate = 0.85
+mutation_rate = 0.01
 
-number_of_generations = 100
+number_of_generations = 500
+number_of_elements_selected_by_generation = 10
 
 
 def init_population():
@@ -99,10 +100,13 @@ def crossover(matching_parents):
         else:
             second_parent = parent
 
-            first_son, second_son = crossover_by_two_parents(first_parent, second_parent)
+            crossover_chance = random()
 
-            offspring.append(first_son)
-            offspring.append(second_son)
+            if crossover_chance < crossover_rate:
+                first_son, second_son = crossover_by_two_parents(first_parent, second_parent)
+
+                offspring.append(first_son)
+                offspring.append(second_son)
 
     return offspring
 
@@ -128,11 +132,13 @@ def mutate(population):
 
 
 def reproduce_population(population, parents, offspring):
-    for parent in parents:
-        population.remove(parent)
+    if offspring:
+        for parent in parents:
+            if parent in population:
+                population.remove(parent)
 
-    for element in offspring:
-        population.append(element)
+        for element in offspring:
+            population.append(element)
 
     return population
 
@@ -154,20 +160,15 @@ if __name__ == '__main__':
         element_score = score_elements(population)
 
         wheel = make_wheel(element_score)
-        parents_index = select_parents(wheel, 8)
+        parents_index = select_parents(wheel, number_of_elements_selected_by_generation)
         parents = [population[element] for element in parents_index]
 
-        crossover_chance = random()
+        offspring = crossover(parents)
 
-        if crossover_chance < crossover_rate:
-            offspring = crossover(parents)
-
-            population = reproduce_population(population, parents, offspring)
+        population = reproduce_population(population, parents, offspring)
 
         population = mutate(population)
+
         generations_score.append(score_generation(population))
 
     print(generations_score)
-
-
-
