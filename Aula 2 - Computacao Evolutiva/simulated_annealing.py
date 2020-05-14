@@ -24,8 +24,12 @@ from random import random
 
 class SimulatedAnnealing(BaseClass):
     @property
+    def algorithm_name(self):
+        return 'Simulated Annealing'
+
+    @property
     def max_iterations(self):
-        return 100
+        return 1000000
 
     def run_algorithm(self):
         print(self._simmulated_annealing())
@@ -38,11 +42,11 @@ class SimulatedAnnealing(BaseClass):
 
     def _init_values(self):
         x, system_temperature = 0, 1
-
+~
         return x, system_temperature
 
     def _disturb_system(self, x, system_temperature):
-        system_temperature = self.cd g_function(system_temperature)
+        system_temperature = self.g_function(system_temperature)
         x_rate = self.rate(x)
 
         for _ in range(self.max_iterations):
@@ -57,6 +61,8 @@ class SimulatedAnnealing(BaseClass):
                 x, x_rate = new_x, new_x_rate
             elif random_element < exponential_function_result:
                 x, x_rate = new_x, new_x_rate
+
+            self.append_element(x_rate)
 
         return x, system_temperature
 

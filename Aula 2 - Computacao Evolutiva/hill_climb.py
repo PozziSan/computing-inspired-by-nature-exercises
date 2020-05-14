@@ -17,11 +17,15 @@ from base import BaseClass
 
 class HillClimb(BaseClass):
     @property
-    def max_itarations(self):
-        return 100
+    def algorithm_name(self):
+        return 'Hill Climb'
+
+    @property
+    def max_iterations(self):
+        return 1000
 
     def run_algorithm(self):
-        print(self._hill_climbing(self.max_itarations, 1))
+        print(self._hill_climbing(self.max_iterations, 1))
 
     def rate(self, x_value):
         return self.g_function(x_value)
@@ -42,7 +46,6 @@ class HillClimb(BaseClass):
                 x = new_x_value
                 x_rate = new_x_value_rate
 
-            if x_rate == best_value:
-                break
+            self.append_element(x_rate)
 
         return x

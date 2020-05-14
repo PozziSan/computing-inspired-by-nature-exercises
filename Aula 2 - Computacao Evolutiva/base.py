@@ -1,22 +1,35 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractclassmethod, abstractmethod
+from matplotlib import pyplot
 from math import pi, sin
 from random import gauss
+from numpy import std
 
 
 class BaseClass(ABC):
+    def __init__(self):
+        self.value_per_iteration = []
+
+    def append_element(self, element):
+        self.value_per_iteration = self.value_per_iteration + [element]
+
     @property
-    def max_itarations(self):
+    def max_iterations(self):
         return 1
 
-    @abstractclassmethod
+    @property
+    @abstractmethod
+    def algorithm_name(self):
+        pass
+
+    @abstractmethod
     def run_algorithm(self):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def rate(self):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def disturb(self):
         pass
 
@@ -38,3 +51,16 @@ class BaseClass(ABC):
         result = first_element * second_element
 
         return result
+
+    def plot_graphic(self):
+        pyplot.plot(self.value_per_iteration, color='red')
+
+        pyplot.ylabel('Resultado da função')
+        pyplot.xlabel('Iteração')
+        pyplot.grid(True)
+        pyplot.title(self.algorithm_name)
+
+        pyplot.show()
+
+    def standard_deviation(self):
+        return std(self.value_per_iteration)
