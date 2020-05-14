@@ -25,8 +25,8 @@ class BaseClass(ABC):
 
     def g_function(self, x_value):
         exponential_element = (x_value - 0.1)/0.9
-        exponential_element = -2 * exponential_element
         exponential_element = exponential_element ** 2
+        exponential_element = -2 * exponential_element
 
         first_element = 2 ** exponential_element
 
