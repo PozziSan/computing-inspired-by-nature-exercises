@@ -2,14 +2,14 @@ import math
 import random
 
 from matplotlib import pyplot
-from numpy import sum, mean
+from numpy import sum, mean, std
 
 population_len = 100
 
 crossover_rate = 0.7
 mutation_rate = 0.01
 
-number_of_generations = 1000
+number_of_generations = 100
 number_of_elements_selected_by_generation = 60
 
 
@@ -131,13 +131,13 @@ def crossover_by_two_parents(first_parent, second_parent):
         second_son['y'] = normalize_value_within_problem_scope(second_son['y'])
     else:
         first_son = {
-            'x': first_parent['x'],
+            'x': second_parent['x'],
             'y': first_parent['y'] + second_parent['y']
         }
 
         second_son = {
             'x': first_parent['x'] + second_parent['x'],
-            'y': first_parent['y']
+            'y': second_parent['y']
         }
 
         first_son['y'] = normalize_value_within_problem_scope(first_son['y'])
@@ -227,6 +227,7 @@ def score_generation(population):
 
 
 if __name__ == '__main__':
+    #inicia a população aleatóriamente
     population = init_population()
     generations_score = []
     best_min = []
@@ -235,45 +236,74 @@ if __name__ == '__main__':
     best_min_results = []
     best_mean_results = []
     best_max_results = []
+    best_max_execution = []
+    best_min_execution = []
+    best_mean_execution = []
+    best_max_results_execution = []
+    best_min_results_execution = []
+    best_mean_results_execution = []
 
-    for _ in range(number_of_generations):
-        population_results = rating_function(population)
-        elements_score = score_elements(population_results)
+    #executa o algoritmo X vezes
+    for _ in range(10):
+        # laço de repetição para N gerações
+        for _ in range(number_of_generations):
+            # resultado da função por individuos
+            population_results = rating_function(population)
+            # avalia os individuos
+            elements_score = score_elements(population_results)
 
-        wheel = make_wheel(elements_score)
-        selected_parents_index = select_parents(wheel, number_of_elements_selected_by_generation)
-        selected_parents = [population[index] for index in selected_parents_index]
+            # cria a roleta de seleção
+            wheel = make_wheel(elements_score)
+            # seleciona o indice dos pais
+            selected_parents_index = select_parents(wheel, number_of_elements_selected_by_generation)
+            # cria o array de pais
+            selected_parents = [population[index] for index in selected_parents_index]
 
-        offspring = crossover(selected_parents)
-        population = reproduce_population(population, selected_parents, offspring)
-        population = mutate(population)
+            # cria os filhos
+            offspring = crossover(selected_parents)
+            #insere os filhos no lugar dos pais
+            population = reproduce_population(population, selected_parents, offspring)
+            #aplica a mutação. (a checagem é feita dentro da função)
+            population = mutate(population)
 
-        best_min_results.append(min(population_results))
-        best_mean_results.append(mean(population_results))
-        best_max_results.append(max(population_results))
+            # adiciona estatísticas
+            best_min_results.append(min(population_results))
+            best_mean_results.append(mean(population_results))
+            best_max_results.append(max(population_results))
 
-        best_min.append(min(elements_score))
-        best_mean.append(mean(elements_score))
-        best_max.append(max(elements_score))
+            best_min.append(min(elements_score))
+            best_mean.append(mean(elements_score))
+            best_max.append(max(elements_score))
 
-    pyplot.plot(best_max, color='blue')
-    pyplot.plot(best_mean, color='green')
-    pyplot.plot(best_min, color='red')
+        best_max_execution.append(mean(best_max))
+        best_mean_execution.append(mean(best_mean))
+        best_min_execution.append(mean(best_min))
+
+        best_max_results_execution.append(mean(best_max_results))
+        best_mean_results_execution.append(mean(best_mean_results))
+        best_min_results_execution.append(mean(best_min_results))
+
+    pyplot.plot(best_max_execution, color='blue', label='Média de Máximos')
+    pyplot.plot(best_mean_execution, color='green', label='Média de Médios')
+    pyplot.plot(best_min_execution, color='red', label='Média de Mínimos')
 
     pyplot.ylabel('Aptidão')
     pyplot.xlabel('Gerações')
-    pyplot.title('Elements Score')
+    pyplot.title('Média da Pontuação dos Indivíduos')
+    pyplot.legend(loc='lower right')
     pyplot.grid(True)
 
     pyplot.show()
 
-    pyplot.plot(best_max_results, color='blue')
-    pyplot.plot(best_mean_results, color='green')
-    pyplot.plot(best_min_results, color='red')
+    pyplot.plot(best_max_results_execution, color='blue', label='Média de Máximos')
+    pyplot.plot(best_mean_results_execution, color='green', label='Média de Médios')
+    pyplot.plot(best_min_results_execution, color='red', label='Média de Mínimos')
 
     pyplot.ylabel('Aptidão')
     pyplot.xlabel('Gerações')
-    pyplot.title('Results')
+    pyplot.title('Média dos Resultados dos Indivíduos por Geração')
+    pyplot.legend(loc='lower right')
     pyplot.grid(True)
 
     pyplot.show()
+    print(std(best_mean_execution))

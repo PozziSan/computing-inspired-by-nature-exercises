@@ -16,8 +16,16 @@ from hill_climb import HillClimb
 
 
 class InteractiveHillClimb(HillClimb):
+    @property
+    def algorithm_name(self):
+        return 'Interactive Hill Climb'
+
+    @property
+    def max_iterations(self):
+        return 100
+
     def run_algorithm(self):
-        print(self._interactive_hill_climbing(3, self.max_itarations, 1))
+        print(self._interactive_hill_climbing(3, self.max_iterations, 1))
 
     def _interactive_hill_climbing(self, n_start, max_it, best_value):
         better_value = self.g_function(1)
@@ -27,11 +35,10 @@ class InteractiveHillClimb(HillClimb):
             x_value = self._hill_climbing(max_it, best_value)
             x_value_rate = self.rate(x_value)
 
-            if abs(best_value - x_value_rate) < abs(best_value - better_value_rate):
+            if x_value_rate > better_value_rate:
                 better_value = x_value
                 better_value_rate = x_value_rate
 
-            if better_value_rate == best_value:
-                break
+        self.append_element(better_value)
 
         return x_value

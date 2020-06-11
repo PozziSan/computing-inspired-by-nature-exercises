@@ -215,6 +215,7 @@ def reproduce_population(population, parents, offspring):
 
 
 if __name__ == '__main__':
+    # Gera população inicial aleatoriamente
     population = init_population()
     best_min = []
     best_mean = []
@@ -229,22 +230,36 @@ if __name__ == '__main__':
     best_min_results_execution = []
     best_mean_results_execution = []
 
+    # Laço de Repetição para executar o algoritmo 100 vezes
     for _ in range(100):
+        # Laço de repetição para executar N gerações
         for _ in range(number_of_generations):
+            # Converte os valores da população para float
             population, population_float_values = convert_population_to_float(population)
+            # Avalia os resultados dos individuos
             population_results = population_result(population_float_values)
 
+            # realiza a soma dos resultados dos individuos
             population_sum = sum(population_results)
+            # avalia os individuos
             elements_score = score_elements(population_results, population_sum)
 
+            #cria a roleta de seleção
             wheel = make_wheel(elements_score)
+            # encontra os indices de pais selecionados
             parents_index = select_parents(wheel, number_of_elements_selected_by_generation)
+            # cria o array de pais
             parents = [population[element] for element in parents_index]
 
+            #cria os filhos
             offspring = crossover(parents)
+            #insere os filhos no lugar dos pais
             population = reproduce_population(population, parents, offspring)
+
+            #aplica a mutação. (a checagem é feita dentro da função)
             population = mutate(population)
 
+            # adiciona as estatisticas
             best_min_results.append(min(population_results))
             best_mean_results.append(mean(population_results))
             best_max_results.append(max(population_results))

@@ -29,7 +29,7 @@ class SimulatedAnnealing(BaseClass):
 
     @property
     def max_iterations(self):
-        return 1000000
+        return 1000
 
     def run_algorithm(self):
         print(self._simmulated_annealing())
@@ -42,7 +42,7 @@ class SimulatedAnnealing(BaseClass):
 
     def _init_values(self):
         x, system_temperature = 0, 1
-~
+
         return x, system_temperature
 
     def _disturb_system(self, x, system_temperature):

@@ -46,6 +46,7 @@ def score_elements(population):
     return elements_score
 
 
+#cria a roleta de elementos
 def make_wheel(elements_score):
     wheel = []
     total = sum(elements_score)
@@ -60,6 +61,7 @@ def make_wheel(elements_score):
     return wheel
 
 
+#busca binária para encontrar um elemento na roleta
 def binary_search(wheel, num):
     mid = len(wheel) // 2
     low, high, answer_index = wheel[mid]
@@ -153,6 +155,7 @@ def score_generation(population):
 
 
 if __name__ == '__main__':
+    # Gera população inicial aleatoriamente
     population = init_population()
     best_min = []
     best_mean = []
@@ -162,23 +165,33 @@ if __name__ == '__main__':
     best_min_executions = []
     elements_score_executions = []
 
+    # Laço de Repetição para executar o algoritmo 1000 vezes
     for _ in range(1000):
         generations_score = []
+        # Laço de repetição para executar N gerações
         for _ in range(number_of_generations):
+            #avalia elementos
             element_score = score_elements(population)
 
+            #cria roleta de seleção
             wheel = make_wheel(element_score)
+            #seleciona os pais
             parents_index = select_parents(wheel, number_of_elements_selected_by_generation)
+            #cria o array de pais
             parents = [population[element] for element in parents_index]
 
+            #cria os filhos
             offspring = crossover(parents)
 
+            #Insere os filhos no lugar dos pais
             population = reproduce_population(population, parents, offspring)
 
+            #aplica a mutação. (a checagem é feita dentro da função)
             population = mutate(population)
 
             generations_score.append(score_generation(population))
 
+            #adiciona estatisticas
             best_min.append(min(element_score))
             best_mean.append(mean(element_score))
             best_max.append(max(element_score))
